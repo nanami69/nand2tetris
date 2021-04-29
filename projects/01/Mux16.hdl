@@ -1,0 +1,81 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux16.hdl
+
+/**
+ * 16-bit multiplexor: 
+ * for i = 0..15 out[i] = a[i] if sel == 0 
+ *                        b[i] if sel == 1
+ */
+
+CHIP Mux16 {
+    IN a[16], b[16], sel;
+    OUT out[16];
+
+    PARTS:
+    Not(in=sel, out=nSel);
+    And(a=a[0], b=nSel, out=v0);
+    And(a=b[0], b=sel, out=w0);
+    Or(a=v0, b=w0, out=out[0]);
+
+    And(a=a[1], b=nSel, out=v1);
+    And(a=b[1], b=sel, out=w1);
+    Or(a=v1, b=w1, out=out[1]);
+
+    And(a=a[2], b=nSel, out=v2);
+    And(a=b[2], b=sel, out=w2);
+    Or(a=v2, b=w2, out=out[2]);
+
+    And(a=a[3], b=nSel, out=v3);
+    And(a=b[3], b=sel, out=w3);
+    Or(a=v3, b=w3, out=out[3]);
+
+    And(a=a[4], b=nSel, out=v4);
+    And(a=b[4], b=sel, out=w4);
+    Or(a=v4, b=w4, out=out[4]);
+
+    And(a=a[5], b=nSel, out=v5);
+    And(a=b[5], b=sel, out=w5);
+    Or(a=v5, b=w5, out=out[5]);
+
+    And(a=a[6], b=nSel, out=v6);
+    And(a=b[6], b=sel, out=w6);
+    Or(a=v6, b=w6, out=out[6]);
+
+    And(a=a[7], b=nSel, out=v7);
+    And(a=b[7], b=sel, out=w7);
+    Or(a=v7, b=w7, out=out[7]);
+
+    And(a=a[8], b=nSel, out=v8);
+    And(a=b[8], b=sel, out=w8);
+    Or(a=v8, b=w8, out=out[8]);
+
+    And(a=a[9], b=nSel, out=v9);
+    And(a=b[9], b=sel, out=w9);
+    Or(a=v9, b=w9, out=out[9]);
+
+    And(a=a[10], b=nSel, out=v10);
+    And(a=b[10], b=sel, out=w10);
+    Or(a=v10, b=w10, out=out[10]);
+
+    And(a=a[11], b=nSel, out=v11);
+    And(a=b[11], b=sel, out=w11);
+    Or(a=v11, b=w11, out=out[11]);
+
+    And(a=a[12], b=nSel, out=v12);
+    And(a=b[12], b=sel, out=w12);
+    Or(a=v12, b=w12, out=out[12]);
+
+    And(a=a[13], b=nSel, out=v13);
+    And(a=b[13], b=sel, out=w13);
+    Or(a=v13, b=w13, out=out[13]);
+
+    And(a=a[14], b=nSel, out=v14);
+    And(a=b[14], b=sel, out=w14);
+    Or(a=v14, b=w14, out=out[14]);
+
+    And(a=a[15], b=nSel, out=v15);
+    And(a=b[15], b=sel, out=w15);
+    Or(a=v15, b=w15, out=out[15]);
+}
