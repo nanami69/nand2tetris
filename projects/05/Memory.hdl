@@ -27,5 +27,14 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Road case
+    DMux(in=load, sel=address[14], a=ramload, b=otherload); // A
+    DMux(in=otherload, sel=address[13], a=scrload, b=kbload); // B
+
+    RAM16K(in=in, load=ramload, address=address[0..13], out=ramout);
+    Screen(in=in, load=scrload, address=address[0..12], out=scrout);
+    Keyboard(out=kbout);
+
+    Mux16(a=scrout, b=kbout, sel=address[13], out=otherout); // B
+    Mux16(a=ramout, b=otherout, sel=address[14], out=out); // A
 }

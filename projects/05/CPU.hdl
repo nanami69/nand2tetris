@@ -39,5 +39,63 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    // アドレス命令: 0vvvvvvvvvvvvvvv, 計算命令: 111accccccdddjjj
+    // アドレス命令であればAレジスタに格納する
+    Mux16(a=instruction, b=aluout, sel=instruction[15], out=aIn);
+
+    // instruction[15]==0 or instruction[5](=d1)==1
+    Not(in=instruction[15], out=acmd);
+    Or(a=acmd, b=instruction[5], out=aLoad);
+
+    // Aレジスタ: MuxとaddressMへ出力
+    ARegister(in=aIn, load=aLoad, out=a, out[0..14]=addressM);
+
+    // Dレジスタ(ALUへの入力①)
+    // 計算命令（i=1）かつd2が1
+    And(a=instruction[4], b=instruction[15], out=dLoad);
+    DRegister(in=aluout, load=dLoad, out=dout);
+
+    // ALUへの入力②
+    // aビットが１ならinM, 0ならA命令
+    Mux16(a=a, b=inM, sel=instruction[12], out=am);
+
+    // ALU
+    // 図2-6と図4-3よりzx(c1), nx(c2)...no(c6)
+    ALU(
+        x=dout,y=am,
+        zx=instruction[11],
+        nx=instruction[10],
+        zy=instruction[9],
+        ny=instruction[8],
+        f=instruction[7],
+        no=instruction[6],
+        out=aluout,out=outM,
+        zr=zr,ng=ng
+    );
+
+    // PC
+    // j1-j3全て0ならinc=1, A命令ならinc=1
+    // -> j1-j3どれかが1かつA命令じゃなければ(instruction[15]=1)load=1
+
+    // j1, j2, j3
+    // 図4-5より
+    And(a=instruction[2], b=ng, out=j1true); // out < 0
+    And(a=instruction[1], b=zr, out=j2true); // out = 0
+
+    // out > 0
+    Or(a=ng, b=zr, out=minus);
+    Not(in=minus, out=plus);
+    And(a=instruction[0], b=plus, out=j3true);
+
+    Or(a=j1true, b=j2true, out=j12true);
+    Or(a=j12true, b=j3true, out=j123true);
+    And(a=j123true, b=instruction[15], out=load);
+    Not(in=load, out=inc);
+
+    PC(in=a, inc=inc, load=load, reset=reset, out[0..14]=pc);
+
+    // writeM
+    // C命令かつd3=1
+    And(a=instruction[3], b=instruction[15], out=writeM);
+
 }
